@@ -121,6 +121,9 @@ void testPage(WiFiClient client){
             client.println("HTTP/1.1 200 OK");
             client.println("Content-type:text/html");
             client.println();
+            client.print(" <!DOCTYPE html>");
+            client.print("<html><body>");
+     
 
             // the content of the HTTP response follows the header:
             client.print("Click <a href=\"/H\">here</a> turn the LED on pin 9 on<br>");
@@ -129,6 +132,8 @@ void testPage(WiFiClient client){
               client.println( logImu() + "<br>");
             // The HTTP response ends with another blank line:
             client.println();
+             
+            client.print("</html></body>");
             // break out of the while loop:
             break;
           } else {    // if you got a newline, then clear currentLine:
