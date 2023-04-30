@@ -6,11 +6,7 @@
 Adafruit_MPU6050 mpu;
 
 #include <WiFi.h>
-
-#ifndef STASSID
-#define STASSID "HOME"
-#define STAPSK "castrowifi"
-#endif
+#include "arduino_secrets.h"
 
 const char* ssid = STASSID;
 const char* password = STAPSK;
@@ -177,5 +173,3 @@ void printWifiStatus() {
   Serial.print("To see this page in action, open a browser to http://");
   Serial.println(ip);
 }
-
- 
