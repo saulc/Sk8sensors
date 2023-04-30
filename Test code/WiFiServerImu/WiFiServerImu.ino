@@ -125,7 +125,8 @@ void testPage(WiFiClient client){
             // the content of the HTTP response follows the header:
             client.print("Click <a href=\"/H\">here</a> turn the LED on pin 9 on<br>");
             client.print("Click <a href=\"/L\">here</a> turn the LED on pin 9 off<br>");
-            client.print( logImu());
+            for(int i=0; i<111; i++) 
+              client.println( logImu() + "<br>");
             // The HTTP response ends with another blank line:
             client.println();
             // break out of the while loop:
