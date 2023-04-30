@@ -8,8 +8,8 @@ Adafruit_MPU6050 mpu;
 #include <WiFi.h>
 #include "arduino_secrets.h"
 
-const char* ssid = STASSID;
-const char* password = STAPSK;
+const char* ssid = SECRET_SSID;
+const char* password = SECRET_PASS;
 
 int port = 4242;
 
