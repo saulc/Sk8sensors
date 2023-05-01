@@ -21,14 +21,14 @@ int ii = 0;
 WiFiServer server(port);
 
 
-String logImu(){
+String logImu(int i){
   String dat = "";
   /* Get new sensor events with the readings */
   sensors_event_t a, g, temp;
   mpu.getEvent(&a, &g, &temp);
 
     char l1[32];
-    sprintf(l1,"%03f %03f %03f %03f %03f %03f T:%03f", 
+    sprintf(l1,"%02d: %03f %03f %03f %03f %03f %03f T:%03f", i, 
     a.acceleration.x, a.acceleration.y, a.acceleration.z, g.gyro.x, g.gyro.y, g.gyro.z, temp.temperature ); 
   dat = l1;
   imuData[ii] = dat;
@@ -125,11 +125,11 @@ void testPage(WiFiClient client){
             client.print("Click <a href=\"/H\">here</a> turn the LED on pin 9 on<br>");
             client.print("Click <a href=\"/L\">here</a> turn the LED on pin 9 off<br>");
             for(int i=0; i<111; i++) 
-              client.println( logImu() + "<br>");
-            // The HTTP response ends with another blank line:
-            client.println();
+              client.println( logImu(i+1) + "<br>");
              
             client.print("</html></body>");
+            // The HTTP response ends with another blank line:
+            client.println();
             // break out of the while loop:
             break;
           } else {    // if you got a newline, then clear currentLine:

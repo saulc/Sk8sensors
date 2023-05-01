@@ -2,16 +2,20 @@ package com.acme.sk8
 
 import android.content.ClipData
 import android.os.Bundle
+import android.util.Log
 import android.view.DragEvent
-import androidx.fragment.app.Fragment
-import com.google.android.material.appbar.CollapsingToolbarLayout
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.TextView
-import com.acme.sk8.placeholder.PlaceholderContent
+import androidx.fragment.app.Fragment
 import com.acme.sk8.databinding.FragmentItemDetailBinding
+import com.acme.sk8.placeholder.PlaceholderContent
+import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.util.*
 
 /**
  * A fragment representing a single Item detail screen.
@@ -21,12 +25,18 @@ import com.acme.sk8.databinding.FragmentItemDetailBinding
  */
 class ItemDetailFragment : Fragment() {
 
+    private val TAG = javaClass.simpleName
+
+    private fun log(s: String) {
+        Log.i(TAG, s)
+    }
     /**
      * The placeholder content this fragment is presenting.
      */
     private var item: PlaceholderContent.PlaceholderItem? = null
 
     lateinit var itemDetailTextView: TextView
+    private var fab: FloatingActionButton? = null
     private var webView: WebView? = null
     private var toolbarLayout: CollapsingToolbarLayout? = null
 
@@ -72,6 +82,7 @@ class ItemDetailFragment : Fragment() {
         toolbarLayout = binding.toolbarLayout
         itemDetailTextView = binding.itemDetail
         webView = binding.web
+        fab = binding.fab
         updateContent()
         rootView.setOnDragListener(dragListener)
 
@@ -87,6 +98,24 @@ class ItemDetailFragment : Fragment() {
         }
         webView?.getSettings()?.setJavaScriptEnabled(true);
         webView?.loadUrl("10.0.0.72:4242")
+        //next
+
+        fab?.setOnClickListener(View.OnClickListener {
+            log("Fab 1 Clicked: next")
+
+            webView?.loadUrl("10.0.0.72:4242/android")
+        })
+
+        fab?.setOnLongClickListener(OnLongClickListener {
+            log( "Fab 1 Long Clicked: next")
+            val calendar: Calendar = Calendar.getInstance()
+            val now: Date = calendar.getTime()
+             log(now.toString())
+//            val current: TimeZone = calendar.getTimeZone()
+            webView?.loadUrl("10.0.0.72:4242/Time:1234567")
+
+            true
+        })
     }
 
     companion object {
