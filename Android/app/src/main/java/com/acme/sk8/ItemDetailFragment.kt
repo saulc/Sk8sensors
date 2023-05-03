@@ -23,7 +23,7 @@ import java.util.*
  * in two-pane mode (on larger screen devices) or self-contained
  * on handsets.
  */
-class ItemDetailFragment : Fragment() {
+class ItemDetailFragment : Fragment(), MConnect.sensorListener {
 
     private val TAG = javaClass.simpleName
 
@@ -39,6 +39,7 @@ class ItemDetailFragment : Fragment() {
     private var fab: FloatingActionButton? = null
     private var webView: WebView? = null
     private var toolbarLayout: CollapsingToolbarLayout? = null
+    private lateinit var sensor :MConnect
 
     private var _binding: FragmentItemDetailBinding? = null
 
@@ -89,6 +90,11 @@ class ItemDetailFragment : Fragment() {
         return rootView
     }
 
+
+    public override fun updateData(dat: String){
+
+        itemDetailTextView.text = dat
+    }
     private fun updateContent() {
         toolbarLayout?.title = item?.content
 
@@ -97,13 +103,17 @@ class ItemDetailFragment : Fragment() {
             itemDetailTextView.text = it.details
         }
         webView?.getSettings()?.setJavaScriptEnabled(true);
-        webView?.loadUrl("10.0.0.72:4242")
+//        webView?.loadUrl("10.0.0.72:4242")
         //next
-
+        sensor = MConnect()
+        sensor.mlistener = this
         fab?.setOnClickListener(View.OnClickListener {
             log("Fab 1 Clicked: next")
 
-            webView?.loadUrl("10.0.0.72:4242/android")
+//            webView?.loadUrl("10.0.0.72:4242/android")
+
+            sensor.Message = "Update Sensor."
+            sensor.requestSensorData()
         })
 
         fab?.setOnLongClickListener(OnLongClickListener {
@@ -112,7 +122,10 @@ class ItemDetailFragment : Fragment() {
             val now: Date = calendar.getTime()
              log(now.toString())
 //            val current: TimeZone = calendar.getTimeZone()
-            webView?.loadUrl("10.0.0.72:4242/Time:1234567")
+//            webView?.loadUrl("10.0.0.72:4242/Time:1234567")
+
+            sensor.Message = now.toString()
+            sensor.requestSensorData()
 
             true
         })

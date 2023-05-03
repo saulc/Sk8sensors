@@ -20,6 +20,7 @@ int ii = 0;
 
 WiFiServer server(port);
 
+IPAddress ip(10, 0, 0, 180);  
 
 String logImu(int i){
   String dat = "";
@@ -27,7 +28,7 @@ String logImu(int i){
   sensors_event_t a, g, temp;
   mpu.getEvent(&a, &g, &temp);
 
-    char l1[32];
+    char l1[32]; //format c string then convert to regular string...for now..
     sprintf(l1,"%02d: %03f %03f %03f %03f %03f %03f T:%03f", i, 
     a.acceleration.x, a.acceleration.y, a.acceleration.z, g.gyro.x, g.gyro.y, g.gyro.z, temp.temperature ); 
   dat = l1;
@@ -57,6 +58,7 @@ void setup() {
   
   WiFi.mode(WIFI_STA);
   WiFi.setHostname("PicoW2");
+    WiFi.config(ip);
   Serial.printf("Connecting to '%s' with '%s'\n", ssid, password);
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
