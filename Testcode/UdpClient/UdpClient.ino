@@ -13,7 +13,7 @@
 
   adapted from Ethernet library examples
 */
-
+  
 
 #include <WiFi.h>
 #include <WiFiUdp.h>
@@ -30,7 +30,7 @@ WiFiUDP Udp;
 
 void setup() {
   Serial.begin(115200);
-  WiFi.begin(STASSID, STAPSK);
+  WiFi.begin(SECRET_SSID, SECRET_PASS);
   while (WiFi.status() != WL_CONNECTED) {
     Serial.print('.');
     delay(500);
@@ -53,7 +53,7 @@ void loop() {
     Serial.println("Contents:");
     Serial.println(packetBuffer);
  
-    sprintf(ReplyBuffer ,"%02d: %.03f %03f %03f %03f %03f %03f T:%03f\r\n", 1, 2., 3., 4., 5., 6., 7., 8.);
+    sprintf(ReplyBuffer ,"%d: %.03f %03f %03f %03f %03f %03f T:%03f\r\n", 1, 2., 3., 4., 5., 6., 7., 8.);
     
 
     // send a reply, to the IP address and port that sent us the packet we received
