@@ -44,14 +44,14 @@ int tic(){
   return tt;
 }
 
-String logImu(int i){
+String logImu(int i, int ii){
   String dat = "";
   /* Get new sensor events with the readings */
   sensors_event_t a, g, temp;
   mpu.getEvent(&a, &g, &temp);
 
 //    char l1[49]; //format c string then convert to regular string...for now..
-    sprintf(ReplyBuffer,"%02d: %.03f %.03f %.03f %.03f %.03f %.03f T:%.02f", i, 
+    sprintf(ReplyBuffer,"%02d-%02d: %.03f %.03f %.03f %.03f %.03f %.03f T:%.02f\n", i, ii,
      a.acceleration.x, a.acceleration.y, a.acceleration.z, g.gyro.x, g.gyro.y, g.gyro.z, temp.temperature ); 
   dat = ReplyBuffer;
 //  ReplyBuffer = l1;
@@ -111,11 +111,14 @@ void loop() {
     Serial.println(packetBuffer);
  
 //    sprintf(ReplyBuffer ,"%d: %.04f %.04f %.04f %.04f %.04f %.04f %.04f\r\n", 1, 2., 3., 4., 5., 6., 7., 8.);
-    logImu(tic()); //load the reply with data
+//    logImu(tic()); //load the reply with data
 
     // send a reply, to the IP address and port that sent us the packet we received
     Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
+    for(int i=0;i<10; i++){
+        logImu(tic(), i); //load the reply with data
     Udp.write(ReplyBuffer);
+    }
     Udp.endPacket();
   }
 }
