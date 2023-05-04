@@ -3,6 +3,7 @@ package com.acme.sk8;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
@@ -22,14 +23,14 @@ public class MConnect  {
         Log.i(TAG, s);
     }
     private InetAddress IPAddress = null;
-    public String rmessage = "Hello Android!" ;
+    public String rmessage = "Connection Error.? ";
     private AsyncTask<Void, Void, Void> async_cient;
     public String Message = "Test message data place holder ............";
-    public sensorListener mlistener;
-
-    interface sensorListener{
-        void updateData(String dat);
-    }
+    public Mudp.sensorListener mlistener;
+//
+//    interface sensorListener{
+//        void updateData(String dat);
+//    }
     @SuppressLint("NewApi")
     public void requestSensorData()
     {
@@ -39,18 +40,22 @@ public class MConnect  {
             protected Void doInBackground(Void... params)
             {
                 DatagramSocket ds = null;
+                int port = 8889;
 
                 try
                 {
                     byte[] ipAddr = new byte[]{ (byte) 10, (byte) 0,0, (byte) 74};
                     InetAddress addr = InetAddress.getByAddress(ipAddr);
-                    ds = new DatagramSocket(8888);
+
+                    ds = new DatagramSocket(port);
+                    ds.setReuseAddress(true);
+//                    if(!ds.isBound() & !ds.isConnected())
+//                    ds.bind(new InetSocketAddress(port));
                     DatagramPacket requestPac;
-                    requestPac = new DatagramPacket(Message.getBytes(), Message.getBytes().length, addr, 8888);
+                    requestPac = new DatagramPacket(Message.getBytes(), Message.getBytes().length, addr, port);
 //                    DatagramPacket responsePac;
 //                    responsePac = new DatagramPacket(Message.getBytes(), Message.getBytes().length, addr, 8888);
                     ds.setBroadcast(true);
-//                    ds.setReuseAddress(true);
                     ds.send(requestPac);
 
                     ds.receive(requestPac);
@@ -66,6 +71,7 @@ public class MConnect  {
                 {
                     if (ds != null)
                     {
+                        ds.disconnect();
                         ds.close();
                     }
                 }

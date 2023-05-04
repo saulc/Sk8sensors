@@ -20,16 +20,23 @@
 
 #include "secrets.h"
 
-unsigned int localPort = 8888;  // local port to listen on
+unsigned int localPort = 8889 ;  // local port to listen on
 
 // buffers for receiving and sending data
 char packetBuffer[UDP_TX_PACKET_MAX_SIZE + 1];  // buffer to hold incoming packet,
 char ReplyBuffer[] = "acknowledged                                  \r\n";        // a string to send back
  
 WiFiUDP Udp;
+IPAddress ip(10, 0, 0, 89);  
 
 void setup() {
   Serial.begin(115200);
+  for(int i =0; i<11; i++) Serial;
+  Serial.print(".");
+  Serial.println(".");
+  Serial.println("Acme Sk8 sensor test");
+  
+//    WiFi.config(ip);
   WiFi.begin(SECRET_SSID, SECRET_PASS);
   while (WiFi.status() != WL_CONNECTED) {
     Serial.print('.');
@@ -53,7 +60,7 @@ void loop() {
     Serial.println("Contents:");
     Serial.println(packetBuffer);
  
-    sprintf(ReplyBuffer ,"%d: %.03f %03f %03f %03f %03f %03f T:%03f\r\n", 1, 2., 3., 4., 5., 6., 7., 8.);
+    sprintf(ReplyBuffer ,"%d: %.04f %.04f %.04f %.04f %.04f %.04f %.04f\r\n", 1, 2., 3., 4., 5., 6., 7., 8.);
     
 
     // send a reply, to the IP address and port that sent us the packet we received

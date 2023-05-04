@@ -38,8 +38,8 @@ String logImu(int i){
   
 }
 void setup() {
-    Wire.setSDA(8);
-    Wire.setSCL(9);
+//    Wire.setSDA(8);
+//    Wire.setSCL(9);
   Serial.begin(115200); 
   // Try to initialize!
   if (!mpu.begin()) {

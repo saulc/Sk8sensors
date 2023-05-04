@@ -23,7 +23,7 @@ import java.util.*
  * in two-pane mode (on larger screen devices) or self-contained
  * on handsets.
  */
-class ItemDetailFragment : Fragment(), MConnect.sensorListener {
+class ItemDetailFragment : Fragment(), Mudp.sensorListener {
 
     private val TAG = javaClass.simpleName
 
@@ -40,6 +40,7 @@ class ItemDetailFragment : Fragment(), MConnect.sensorListener {
     private var webView: WebView? = null
     private var toolbarLayout: CollapsingToolbarLayout? = null
     private lateinit var sensor :MConnect
+    private lateinit var sconn :Mudp
 
     private var _binding: FragmentItemDetailBinding? = null
 
@@ -105,15 +106,19 @@ class ItemDetailFragment : Fragment(), MConnect.sensorListener {
         webView?.getSettings()?.setJavaScriptEnabled(true);
 //        webView?.loadUrl("10.0.0.72:4242")
         //next
-        sensor = MConnect()
-        sensor.mlistener = this
+//        sensor = MConnect()
+//        sensor.mlistener = this
+        sconn = Mudp()
+        sconn.setListener(this)
         fab?.setOnClickListener(View.OnClickListener {
             log("Fab 1 Clicked: next")
 
 //            webView?.loadUrl("10.0.0.72:4242/android")
-
-            sensor.Message = "Update Sensor."
-            sensor.requestSensorData()
+            val calendar: Calendar = Calendar.getInstance()
+            val now: Date = calendar.getTime()
+            sconn.Message = "\n" +
+                    now.toString() + " :1234 1234 1234 1234 1234 1234 1234"
+            sconn.requestSensorData()
         })
 
         fab?.setOnLongClickListener(OnLongClickListener {
@@ -124,8 +129,8 @@ class ItemDetailFragment : Fragment(), MConnect.sensorListener {
 //            val current: TimeZone = calendar.getTimeZone()
 //            webView?.loadUrl("10.0.0.72:4242/Time:1234567")
 
-            sensor.Message = now.toString()
-            sensor.requestSensorData()
+            sconn.Message = now.toString()
+            sconn.closeSocket()
 
             true
         })
