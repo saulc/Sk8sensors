@@ -117,7 +117,7 @@ class ItemDetailFragment : Fragment(), Mudp.sensorListener {
             val calendar: Calendar = Calendar.getInstance()
             val now: Date = calendar.getTime()
             sconn.Message = "\n" +
-                    now.toString() + " :1234 1234 1234 1234 1234 1234 1234"
+                    now.toString() + " :12345 12345 12345 12345 12345 12345 12345"
             sconn.requestSensorData()
         })
 

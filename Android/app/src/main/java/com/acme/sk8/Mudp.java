@@ -41,7 +41,7 @@ public class Mudp {
             @Override
             public void run() {
                 try{
-                    byte[] ipAddr = new byte[]{(byte) 10, (byte) 0, 0, (byte) 74};
+                    byte[] ipAddr = new byte[]{(byte) 10, (byte) 0, 0, (byte) 72};
 
                     iniSocket(InetAddress.getByAddress(ipAddr));
                     sendRequest();
