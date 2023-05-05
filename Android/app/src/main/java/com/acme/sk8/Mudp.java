@@ -92,7 +92,7 @@ public class Mudp {
             log("Closing Connection  ");
                 try {
                     if (ds != null){
-                        ds.disconnect();
+//                        ds.disconnect();
                         ds.close();
                     }  } catch (Exception e) {
                     log("Connection close error: ");

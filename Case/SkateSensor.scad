@@ -38,9 +38,18 @@ fn = 150;
 // sbox();
  
 // translate([-10,0])
- cover();
+// cover();
 // frame();
+
+censor();
  
+ module censor(){
+                         translate([0, 0, -z ]) rotate([0,0,90]){
+                             sbox();
+                          
+                         translate([0, 0, z ]) mirror([0, 0, 1])  cover();
+                         }
+ }
  module frame(){
      
 	difference(){
