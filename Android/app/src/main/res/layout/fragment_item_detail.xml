@@ -44,18 +44,20 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <WebView
-
-                android:id="@+id/web"
+            <FrameLayout
+                android:id="@+id/containerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context="com.acme.sk8.ItemDetailFragment" />
+                android:layout_height="0dp"
+                android:layout_weight="5">
+
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/item_detail"
                 style="?android:attr/textAppearanceLarge"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:paddingStart="@dimen/container_horizontal_margin"
                 android:paddingTop="16dp"
                 android:paddingEnd="@dimen/container_horizontal_margin"

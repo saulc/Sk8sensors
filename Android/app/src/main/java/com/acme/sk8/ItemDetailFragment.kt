@@ -1,20 +1,36 @@
 package com.acme.sk8
 
 import android.content.ClipData
+import android.content.ContentResolver
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.DragEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup
-import android.webkit.WebView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContentResolverCompat
 import androidx.fragment.app.Fragment
 import com.acme.sk8.databinding.FragmentItemDetailBinding
 import com.acme.sk8.placeholder.PlaceholderContent
+import com.acme.sk8.stl.Model
+import com.acme.sk8.stl.ModelSurfaceView
+import com.acme.sk8.stl.StlModel
+import com.acme.sk8.stl.util.Util
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.io.ByteArrayInputStream
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
+import java.io.IOException
+import java.io.InputStream
 import java.util.*
 
 /**
@@ -37,12 +53,17 @@ class ItemDetailFragment : Fragment(), Mudp.sensorListener {
 
     lateinit var itemDetailTextView: TextView
     private var fab: FloatingActionButton? = null
-    private var webView: WebView? = null
+//    private var webView: WebView? = null
     private var toolbarLayout: CollapsingToolbarLayout? = null
     private lateinit var sensor :MConnect
     private lateinit var sconn :Mudp
 
     private var _binding: FragmentItemDetailBinding? = null
+
+    private lateinit var sampleModels: List<String>
+    private var sampleModelIndex = 0
+    private  var modelView: ModelSurfaceView? = null
+    private val disposables = CompositeDisposable()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -60,6 +81,10 @@ class ItemDetailFragment : Fragment(), Mudp.sensorListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        sampleModels = activity?.assets?.list("")!!.filter { it.endsWith(".stl") }
+//        modelView = binding.surfaceView
+//        modelView = ModelSurfaceView(this, model)
 
         arguments?.let {
             if (it.containsKey(ARG_ITEM_ID)) {
@@ -83,8 +108,10 @@ class ItemDetailFragment : Fragment(), Mudp.sensorListener {
 
         toolbarLayout = binding.toolbarLayout
         itemDetailTextView = binding.itemDetail
-        webView = binding.web
+//        webView = binding.web
         fab = binding.fab
+
+        loadSampleModel()
         updateContent()
         rootView.setOnDragListener(dragListener)
 
@@ -103,7 +130,7 @@ class ItemDetailFragment : Fragment(), Mudp.sensorListener {
         item?.let {
             itemDetailTextView.text = it.details
         }
-        webView?.getSettings()?.setJavaScriptEnabled(true);
+//        webView?.getSettings()?.setJavaScriptEnabled(true);
 //        webView?.loadUrl("10.0.0.72:4242")
         //next
 //        sensor = MConnect()
@@ -145,6 +172,66 @@ class ItemDetailFragment : Fragment(), Mudp.sensorListener {
         })
     }
 
+    private fun createNewModelView(model: Model?) {
+        if (modelView != null) {
+            binding.containerView?.removeView(modelView)
+        }
+        modelView = activity?.applicationContext?.let { ModelSurfaceView(it, model) }
+        binding.containerView?.addView(modelView, 0)
+    }
+
+    private fun beginLoadModel(uri: Uri) {
+
+            var model: Model? = null
+            var stream: InputStream? = null
+            try {
+                val cr = activity?.applicationContext?.contentResolver
+                val fileName = cr?.let { getFileName(it, uri) }
+
+                if (stream != null) {
+                    if (!fileName.isNullOrEmpty()) {
+                        // assume it's STL.
+                        model = StlModel(stream)
+                    }
+                }
+            } finally {
+                Util.closeSilently(stream)
+            }
+
+    }
+
+
+    private fun getFileName(cr: ContentResolver, uri: Uri): String? {
+        if ("content" == uri.scheme) {
+            val projection = arrayOf(MediaStore.MediaColumns.DISPLAY_NAME)
+            ContentResolverCompat.query(cr, uri, projection, null, null, null, null)?.use { metaCursor ->
+                if (metaCursor.moveToFirst()) {
+                    return metaCursor.getString(0)
+                }
+            }
+        }
+        return uri.lastPathSegment
+    }
+    private fun setCurrentModel(model: Model) {
+        createNewModelView(model)
+        ModelViewerApplication.currentModel = model
+        model!!
+        Toast.makeText(activity?.applicationContext, "Model opened!", Toast.LENGTH_SHORT).show()
+//        title = model.title
+//        binding.progressBar.visibility = View.GONE
+    }
+    private fun loadSampleModel() {
+        try {
+
+            val stream = activity?.assets!!.open(sampleModels[0])
+//            val stream = assets.
+            setCurrentModel(StlModel(stream))
+            stream.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
     companion object {
         /**
          * The fragment argument representing the item ID that this fragment
@@ -157,4 +244,6 @@ class ItemDetailFragment : Fragment(), Mudp.sensorListener {
         super.onDestroyView()
         _binding = null
     }
+
+
 }
