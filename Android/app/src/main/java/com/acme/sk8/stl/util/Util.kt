@@ -109,8 +109,8 @@ object Util {
         return px / densityScalar
     }
 
-    private val densityScalar: Float = 540f
-//        get() = geta.instance.resources.displayMetrics.density
+    private val densityScalar: Float
+        get() = ModelViewerApplication.instance.resources.displayMetrics.density
 
     private fun loadShader(type: Int, shaderCode: String): Int {
         val shader = GLES20.glCreateShader(type)

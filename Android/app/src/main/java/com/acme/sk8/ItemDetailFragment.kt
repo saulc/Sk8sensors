@@ -144,16 +144,16 @@ class ItemDetailFragment : Fragment(), Mudp.sensorListener {
             val calendar: Calendar = Calendar.getInstance()
             val now: Date = calendar.getTime()
             sconn.Message = "\n" +
-                    now.toString() + " :12345 12345 12345 12345 12345 12345 12345"+
-                    now.toString() + " :12345 12345 12345 12345 12345 12345 12345"+
-                    now.toString() + " :12345 12345 12345 12345 12345 12345 12345"+
-                    now.toString() + " :12345 12345 12345 12345 12345 12345 12345"+
-                    now.toString() + " :12345 12345 12345 12345 12345 12345 12345"+
-                    now.toString() + " :12345 12345 12345 12345 12345 12345 12345"+
-                    now.toString() + " :12345 12345 12345 12345 12345 12345 12345"+
-                    now.toString() + " :12345 12345 12345 12345 12345 12345 12345"+
-                    now.toString() + " :12345 12345 12345 12345 12345 12345 12345"+
                     now.toString() + " :12345 12345 12345 12345 12345 12345 12345"
+//                    now.toString() + " :12345 12345 12345 12345 12345 12345 12345"+
+//                    now.toString() + " :12345 12345 12345 12345 12345 12345 12345"+
+//                    now.toString() + " :12345 12345 12345 12345 12345 12345 12345"+
+//                    now.toString() + " :12345 12345 12345 12345 12345 12345 12345"+
+//                    now.toString() + " :12345 12345 12345 12345 12345 12345 12345"+
+//                    now.toString() + " :12345 12345 12345 12345 12345 12345 12345"+
+//                    now.toString() + " :12345 12345 12345 12345 12345 12345 12345"+
+//                    now.toString() + " :12345 12345 12345 12345 12345 12345 12345"+
+//                    now.toString() + " :12345 12345 12345 12345 12345 12345 12345"
             sconn.requestSensorData()
         })
 
@@ -164,9 +164,9 @@ class ItemDetailFragment : Fragment(), Mudp.sensorListener {
              log(now.toString())
 //            val current: TimeZone = calendar.getTimeZone()
 //            webView?.loadUrl("10.0.0.72:4242/Time:1234567")
-
-            sconn.Message = now.toString()
-            sconn.closeSocket()
+                modelView?.doaKickflip()
+//            sconn.Message = now.toString()
+//            sconn.closeSocket()
 
             true
         })

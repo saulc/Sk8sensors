@@ -49,7 +49,7 @@ class ModelSurfaceView(context: Context, model: Model?) : GLSurfaceView(context)
                     val dy = y - previousY
                     previousX = x
                     previousY = y
-                    renderer.rotate(pxToDp(dy), pxToDp(dx))
+                    renderer.rotate(pxToDp(dy), pxToDp(dx), 0f)
                 } else if (event.pointerCount == 2) {
                     if (touchMode != TOUCH_ZOOM) {
                         pinchStartDistance = getPinchDistance(event)
@@ -90,7 +90,14 @@ class ModelSurfaceView(context: Context, model: Model?) : GLSurfaceView(context)
         pt.x = (event.getX(0) + event.getX(1)) * 0.5f
         pt.y = (event.getY(0) + event.getY(1)) * 0.5f
     }
-
+    public fun doaKickflip(){
+//        renderer.translate(0f, 0f , 88f)
+        renderer.translate(0f, 11f, 0f)
+        renderer.rotate(0f, 0f, 188.1f)
+//        requestRender()
+        renderer.translate(0f, -11f, 0f)
+        requestRender()
+    }
     companion object {
         private const val TOUCH_NONE = 0
         private const val TOUCH_ROTATE = 1

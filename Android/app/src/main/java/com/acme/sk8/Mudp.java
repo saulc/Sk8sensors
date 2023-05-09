@@ -25,6 +25,7 @@ public class Mudp {
     private AsyncTask<Void, Void, Void> async_cient;
     public String Message = "Test message data place holder ............";
     public sensorListener mlistener;
+    private byte datapoints = 11;
     private DatagramSocket ds = null;
     private int port = 8889;
     private InetAddress addr = null;
@@ -45,13 +46,17 @@ public class Mudp {
 
                     iniSocket(InetAddress.getByAddress(ipAddr));
                     sendRequest();
-                    mlistener.updateData(rmessage);
 //                    closeSocket();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }.start();
+    }
+    private void da(){
+        String temp = Message;
+        for(int i=1; i<datapoints; i++)
+            Message += temp;
     }
     public void sendRequest(){
         new Thread() {
@@ -66,9 +71,13 @@ public class Mudp {
                 }else {
                     ds.setBroadcast(true);
                     ds.send(requestPac);
-                    ds.receive(requestPac);
-                    rmessage = new String(requestPac.getData(), requestPac.getOffset(), requestPac.getLength());
+                    da();
+                    DatagramPacket responsePac = new DatagramPacket(Message.getBytes(), Message.getBytes().length, addr, port);
+
+                    ds.receive(responsePac);
+                    rmessage = new String(responsePac.getData(), responsePac.getOffset(), responsePac.getLength());
                     log(rmessage);
+                    mlistener.updateData(rmessage);
                 }
             }catch(IOException e)
             {

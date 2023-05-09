@@ -25,11 +25,13 @@ class ModelRenderer(private val model: Model?) : GLSurfaceView.Renderer {
     private val light = Light(floatArrayOf(0.0f, 0.0f, MODEL_BOUND_SIZE * 10, 1.0f))
     private val floor = Floor()
 
+    private val floorMatrix = FloatArray(16)
     private val projectionMatrix = FloatArray(16)
     private val viewMatrix = FloatArray(16)
 
     private var rotateAngleX = 0f
     private var rotateAngleY = 0f
+    private var rotateAngleZ = 0f
     private var translateX = 0f
     private var translateY = 0f
     private var translateZ = 0f
@@ -44,10 +46,11 @@ class ModelRenderer(private val model: Model?) : GLSurfaceView.Renderer {
         updateViewMatrix()
     }
 
-    fun rotate(aX: Float, aY: Float) {
+    fun rotate(aX: Float, aY: Float, aZ: Float) {
         val rotateScaleFactor = 0.5f
         rotateAngleX -= aX * rotateScaleFactor
         rotateAngleY += aY * rotateScaleFactor
+        rotateAngleZ += aZ * rotateScaleFactor
         updateViewMatrix()
     }
 
@@ -56,11 +59,18 @@ class ModelRenderer(private val model: Model?) : GLSurfaceView.Renderer {
         Matrix.translateM(viewMatrix, 0, -translateX, -translateY, 0f)
         Matrix.rotateM(viewMatrix, 0, rotateAngleX, 1f, 0f, 0f)
         Matrix.rotateM(viewMatrix, 0, rotateAngleY, 0f, 1f, 0f)
+        Matrix.rotateM(viewMatrix, 0, rotateAngleZ, 0f, 0f, 1f)
+    }
+    private fun updateFloorMatrix() {
+        Matrix.setLookAtM(floorMatrix, 0, 0f, 0f, translateZ, 0f, 0f, 0f, 0f, 1.0f, 0.0f)
+        Matrix.translateM(floorMatrix, 0, -translateX, -translateY, 0f)
+        Matrix.rotateM(floorMatrix, 0, rotateAngleX, 1f, 0f, 0f)
+        Matrix.rotateM(floorMatrix, 0, rotateAngleY, 0f, 1f, 0f)
     }
 
     override fun onDrawFrame(unused: GL10) {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
-        floor.draw(viewMatrix, projectionMatrix, light)
+        floor.draw(floorMatrix, projectionMatrix, light)
         model?.draw(viewMatrix, projectionMatrix, light)
     }
 
@@ -81,9 +91,10 @@ class ModelRenderer(private val model: Model?) : GLSurfaceView.Renderer {
         light.applyViewMatrix(viewMatrix)
 
         // By default, rotate the model towards the user a bit
-        rotateAngleX = -15.0f
-        rotateAngleY = 15.0f
+        rotateAngleX = -24.0f
+        rotateAngleY = 65.0f
         updateViewMatrix()
+        updateFloorMatrix()
     }
 
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
@@ -98,6 +109,7 @@ class ModelRenderer(private val model: Model?) : GLSurfaceView.Renderer {
             it.setup(MODEL_BOUND_SIZE)
             floor.setOffsetY(it.floorOffset)
         }
+        updateFloorMatrix()
     }
 
     companion object {
