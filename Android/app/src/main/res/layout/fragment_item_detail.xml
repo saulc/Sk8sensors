@@ -42,7 +42,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:minHeight="420dp"
             android:orientation="vertical">
 
             <FrameLayout
@@ -75,8 +76,9 @@
         android:layout_gravity="center_vertical|start"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="16dp"
+        app:backgroundTint="@color/purple_700"
         app:layout_anchor="@+id/item_detail_scroll_view"
         app:layout_anchorGravity="top|end"
-        app:srcCompat="@android:drawable/stat_notify_chat" />
+        app:srcCompat="@android:drawable/checkbox_off_background" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipDescription
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -28,7 +29,11 @@ import com.acme.sk8.databinding.ItemListContentBinding
  */
 
 class ItemListFragment : Fragment() {
+    private val TAG = javaClass.simpleName
 
+    public fun log(s: String) {
+        Log.i(TAG, s)
+    }
     /**
      * Method to intercept global key events in the
      * item list fragment to trigger keyboard shortcuts
@@ -108,8 +113,13 @@ class ItemListFragment : Fragment() {
             return ViewHolder(binding)
 
         }
+        private val TAG = javaClass.simpleName
 
+        public fun log(s: String) {
+            Log.i(TAG, s)
+        }
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
             val item = values[position]
             holder.idView.text = item.id
             holder.contentView.text = item.content
