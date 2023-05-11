@@ -2,6 +2,11 @@ package com.acme.sk8
 
 import android.content.ClipData
 import android.content.ContentResolver
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -13,7 +18,6 @@ import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContentResolverCompat
 import androidx.fragment.app.Fragment
 import com.acme.sk8.databinding.FragmentItemDetailBinding
@@ -24,14 +28,11 @@ import com.acme.sk8.stl.StlModel
 import com.acme.sk8.stl.util.Util
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.io.ByteArrayInputStream
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import java.io.IOException
 import java.io.InputStream
 import java.util.*
+import kotlin.math.sin
 
 /**
  * A fragment representing a single Item detail screen.
@@ -39,7 +40,7 @@ import java.util.*
  * in two-pane mode (on larger screen devices) or self-contained
  * on handsets.
  */
-class ItemDetailFragment : Fragment(), Mudp.sensorListener {
+class ItemDetailFragment : Fragment(), Mudp.sensorListener, SensorEventListener {
 
     private val TAG = javaClass.simpleName
 
@@ -107,17 +108,42 @@ class ItemDetailFragment : Fragment(), Mudp.sensorListener {
         val rootView = binding.root
 
         toolbarLayout = binding.toolbarLayout
+        toolbarLayout?.title = resources.getString(R.string.app_name)
         itemDetailTextView = binding.itemDetail
 //        webView = binding.web
         fab = binding.fab
 
         loadSampleModel()
         updateContent()
+        startPhoneImu()
         rootView.setOnDragListener(dragListener)
 
         return rootView
     }
 
+    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
+        // Do something here if sensor accuracy changes.
+        log("Phone sensor Accuracy Changed!")
+    }
+
+    override fun onSensorChanged(event: SensorEvent) {
+
+        log("Phone sensor data Changed!")
+//        log("Values: " + event.values.size)
+        for(v in event.values)
+            log("data..." + v.toString())
+        if( event.values.size >=3)
+            modelView?.rotate(25*sin((event.values[0])/2), 25*sin((event.values[1])/2),25*sin((event.values[2])/2) )
+    }
+    private  fun startPhoneImu(){
+        log("Setting up phone Sensors...")
+        val sensorManager = activity?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+//        val sensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)
+        val sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
+        val deviceSensors: List<Sensor> = sensorManager.getSensorList(Sensor.TYPE_ALL)
+        log("Phone Sensors: " + deviceSensors.toString())
+    }
 
     public override fun updateData(dat: String){
 
@@ -217,6 +243,8 @@ class ItemDetailFragment : Fragment(), Mudp.sensorListener {
         ModelViewerApplication.currentModel = model
         model!!
         Toast.makeText(activity?.applicationContext, "Model opened!", Toast.LENGTH_SHORT).show()
+
+//        modelView?.translate(0f, 0f, 24f)
 //        title = model.title
 //        binding.progressBar.visibility = View.GONE
     }

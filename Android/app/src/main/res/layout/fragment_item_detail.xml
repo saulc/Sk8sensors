@@ -36,39 +36,24 @@
     <androidx.core.widget.NestedScrollView
         android:id="@+id/item_detail_scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/list_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/item_detail"
+            style="?android:attr/textAppearanceLarge"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:minHeight="420dp"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:paddingStart="@dimen/container_horizontal_margin"
+            android:paddingTop="16dp"
+            android:paddingEnd="@dimen/container_horizontal_margin"
+            android:paddingBottom="16dp"
+            android:textIsSelectable="true"
+            tools:context="com.acme.sk8.ItemDetailFragment" />
 
-            <FrameLayout
-                android:id="@+id/containerView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="5">
-
-            </FrameLayout>
-
-            <TextView
-                android:id="@+id/item_detail"
-                style="?android:attr/textAppearanceLarge"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="3"
-                android:paddingStart="@dimen/container_horizontal_margin"
-                android:paddingTop="16dp"
-                android:paddingEnd="@dimen/container_horizontal_margin"
-                android:paddingBottom="16dp"
-                android:textIsSelectable="true"
-                tools:context="com.acme.sk8.ItemDetailFragment" />
-        </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -80,5 +65,13 @@
         app:layout_anchor="@+id/item_detail_scroll_view"
         app:layout_anchorGravity="top|end"
         app:srcCompat="@android:drawable/checkbox_off_background" />
+
+    <FrameLayout
+        android:id="@+id/containerView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_margin"
+        android:layout_gravity="bottom">
+
+    </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

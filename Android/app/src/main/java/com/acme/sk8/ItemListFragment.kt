@@ -9,15 +9,18 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.acme.sk8.placeholder.PlaceholderContent;
 import com.acme.sk8.databinding.FragmentItemListBinding
 import com.acme.sk8.databinding.ItemListContentBinding
+import com.google.android.material.appbar.CollapsingToolbarLayout
 
 /**
  * A Fragment representing a list of Pings. This fragment
@@ -65,7 +68,10 @@ class ItemListFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private var frame : FrameLayout? = null
+    private var conFrag : ConSettingsFragment? = null
 
+    private var toolbarLayout: CollapsingToolbarLayout? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -82,12 +88,19 @@ class ItemListFragment : Fragment() {
         ViewCompat.addOnUnhandledKeyEventListener(view, unhandledKeyEventListenerCompat)
 
         val recyclerView: RecyclerView = binding.itemList
-
+        frame = binding.topframe
+        var addFrag : FragmentTransaction? = activity?.supportFragmentManager?.beginTransaction()
+        conFrag = ConSettingsFragment()
+        frame?.id?.let { addFrag?.add(it, conFrag!!)
+                 addFrag?.commit() }
         // Leaving this not using view binding as it relies on if the view is visible the current
         // layout configuration (layout, layout-sw600dp)
         val itemDetailFragmentContainer: View? = view.findViewById(R.id.item_detail_nav_container)
 
         setupRecyclerView(recyclerView, itemDetailFragmentContainer)
+
+
+        activity?.title = resources.getString(R.string.app_name)
     }
 
     private fun setupRecyclerView(

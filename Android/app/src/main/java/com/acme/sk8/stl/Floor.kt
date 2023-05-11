@@ -23,7 +23,7 @@ import java.nio.ByteOrder
 * limitations under the License.
 */
 class Floor : ArrayModel() {
-    private val floorColor = floatArrayOf(0.2f, 0.2f, 0.2f, 0.5f)
+    private val floorColor = floatArrayOf(0.2f, 0.2f, 0.2f, 0.9f)
     private val lineColor = floatArrayOf(0.6f, 0.6f, 0.6f, 0.5f)
     private var extent = 0f
 

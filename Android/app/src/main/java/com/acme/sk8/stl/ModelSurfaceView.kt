@@ -98,6 +98,14 @@ class ModelSurfaceView(context: Context, model: Model?) : GLSurfaceView(context)
         renderer.translate(0f, -11f, 0f)
         requestRender()
     }
+    public fun translate(rx : Float, ry : Float, rz : Float){
+        renderer.translate(rx, ry, rz)
+        requestRender()
+    }
+    public fun rotate(rx : Float, ry : Float, rz : Float){
+        renderer.rotate(rx, ry, rz)
+        requestRender()
+    }
     companion object {
         private const val TOUCH_NONE = 0
         private const val TOUCH_ROTATE = 1

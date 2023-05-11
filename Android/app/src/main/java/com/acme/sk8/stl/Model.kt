@@ -24,7 +24,7 @@ abstract class Model {
     protected var centerMassY = 0f
     protected var centerMassZ = 0f
 
-    var floorOffset = 0f
+    var floorOffset = 180f
         protected set
 
     var title = ""

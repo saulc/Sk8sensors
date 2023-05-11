@@ -1,4 +1,18 @@
 <resources>
     <string name="app_name">Sk8</string>
-    <string name="title_item_detail">Item Detail</string>
+    <string name="title_item_detail">Connection Preferences</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Connection Settings</string>
+    <string name="sync_header">Sensor Data</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Sensor Address: </string>
+    <string name="reply_title">Port#: </string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Connect to Sensor Automatically</string>
+    <string name="attachment_title">Start recording data</string>
+    <string name="attachment_summary_on">Automatically connect and record sensor data.
+    </string>
+    <string name="attachment_summary_off">Connect and mirror the Board data.</string>
 </resources>

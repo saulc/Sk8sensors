@@ -11,7 +11,9 @@
     <FrameLayout
         android:id="@+id/topframe"
         android:layout_width="match_parent"
-        android:layout_height="120dp">
+        android:layout_marginBottom="@dimen/container_horizontal_margin"
+        android:layout_height="@dimen/list_margin"
+        >
 
     </FrameLayout>
 
@@ -20,7 +22,7 @@
         android:name="com.acme.sk8.ItemListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="@dimen/list_margin"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
