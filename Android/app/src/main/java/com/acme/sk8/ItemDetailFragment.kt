@@ -16,10 +16,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContentResolverCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.acme.sk8.databinding.FragmentItemDetailBinding
 import com.acme.sk8.placeholder.PlaceholderContent
 import com.acme.sk8.stl.Model
@@ -61,6 +63,8 @@ class ItemDetailFragment : Fragment(), Mudp.sensorListener, SensorEventListener 
 
     private var _binding: FragmentItemDetailBinding? = null
 
+    private  var recFrame :FrameLayout? = null
+    private var recFrag :ScreenCaptureFragment? = null
     private lateinit var sampleModels: List<String>
     private var sampleModelIndex = 0
     private  var modelView: ModelSurfaceView? = null
@@ -128,10 +132,10 @@ class ItemDetailFragment : Fragment(), Mudp.sensorListener, SensorEventListener 
 
     override fun onSensorChanged(event: SensorEvent) {
 
-        log("Phone sensor data Changed!")
-//        log("Values: " + event.values.size)
-        for(v in event.values)
-            log("data..." + v.toString())
+//        log("Phone sensor data Changed!")
+////        log("Values: " + event.values.size)
+//        for(v in event.values)
+//            log("data..." + v.toString())
         if( event.values.size >=3)
             modelView?.rotate(25*sin((event.values[0])/2), 25*sin((event.values[1])/2),25*sin((event.values[2])/2) )
     }
@@ -161,6 +165,12 @@ class ItemDetailFragment : Fragment(), Mudp.sensorListener, SensorEventListener 
         //next
 //        sensor = MConnect()
 //        sensor.mlistener = this
+        recFrame = binding.rcontainerView
+        var addFrag : FragmentTransaction? = activity?.supportFragmentManager?.beginTransaction()
+        recFrag = ScreenCaptureFragment()
+        recFrame?.id?.let { addFrag?.add(it, recFrag!!)
+            addFrag?.commit() }
+
         sconn = Mudp()
         sconn.setListener(this)
         fab?.setOnClickListener(View.OnClickListener {
@@ -187,10 +197,12 @@ class ItemDetailFragment : Fragment(), Mudp.sensorListener, SensorEventListener 
             log( "Fab 1 Long Clicked: next")
             val calendar: Calendar = Calendar.getInstance()
             val now: Date = calendar.getTime()
+
              log(now.toString())
 //            val current: TimeZone = calendar.getTimeZone()
 //            webView?.loadUrl("10.0.0.72:4242/Time:1234567")
-                modelView?.doaKickflip()
+//                modelView?.doaKickflip()
+                    modelView?.stopRecording(now.toString())
 //            sconn.Message = now.toString()
 //            sconn.closeSocket()
 

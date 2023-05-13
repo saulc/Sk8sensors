@@ -15,4 +15,6 @@
     <string name="attachment_summary_on">Automatically connect and record sensor data.
     </string>
     <string name="attachment_summary_off">Connect and mirror the Board data.</string>
+    <string name="start">Start Rec</string>
+    <string name="stop">Stop Rec.</string>
 </resources>

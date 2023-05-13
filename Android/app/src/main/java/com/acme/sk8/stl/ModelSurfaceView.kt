@@ -96,6 +96,7 @@ class ModelSurfaceView(context: Context, model: Model?) : GLSurfaceView(context)
         renderer.rotate(0f, 0f, 188.1f)
 //        requestRender()
         renderer.translate(0f, -11f, 0f)
+
         requestRender()
     }
     public fun translate(rx : Float, ry : Float, rz : Float){
@@ -106,6 +107,9 @@ class ModelSurfaceView(context: Context, model: Model?) : GLSurfaceView(context)
         renderer.rotate(rx, ry, rz)
         requestRender()
     }
+    public fun stopRecording(time: String){
+        renderer.finishRecord(time)
+    }
     companion object {
         private const val TOUCH_NONE = 0
         private const val TOUCH_ROTATE = 1
@@ -114,7 +118,7 @@ class ModelSurfaceView(context: Context, model: Model?) : GLSurfaceView(context)
 
     init {
         setEGLContextClientVersion(2)
-        renderer = ModelRenderer(model)
+        renderer = ModelRenderer(model, this)
         setRenderer(renderer)
         renderMode = RENDERMODE_WHEN_DIRTY
     }

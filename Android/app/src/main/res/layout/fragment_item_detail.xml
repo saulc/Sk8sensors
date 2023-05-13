@@ -70,6 +70,15 @@
         android:id="@+id/containerView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_margin"
+        android:layout_marginBottom="@dimen/app_bar_height"
+        android:layout_gravity="bottom">
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/rcontainerView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/app_bar_height"
         android:layout_gravity="bottom">
 
     </FrameLayout>

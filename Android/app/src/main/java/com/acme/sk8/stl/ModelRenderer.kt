@@ -1,10 +1,19 @@
 package com.acme.sk8.stl
 
+import android.media.CamcorderProfile
+import android.media.MediaRecorder
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
+import android.os.Environment
+import android.util.Log
+import android.view.Surface
+import android.view.SurfaceView
+import java.io.File
+import java.io.IOException
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
+
 
 /*
 * Copyright 2017 Dmitry Brant. All rights reserved.
@@ -21,7 +30,7 @@ import javax.microedition.khronos.opengles.GL10
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-class ModelRenderer(private val model: Model?) : GLSurfaceView.Renderer {
+class ModelRenderer(private val model: Model?, private val surfaceView: SurfaceView) : GLSurfaceView.Renderer{
     private val light = Light(floatArrayOf(0.0f, 0.0f, MODEL_BOUND_SIZE * 10, 1.0f))
     private val floor = Floor()
 
@@ -35,6 +44,16 @@ class ModelRenderer(private val model: Model?) : GLSurfaceView.Renderer {
     private var translateX = 0f
     private var translateY = 0f
     private var translateZ = 0f
+
+    private val TAG = javaClass.simpleName
+
+    private fun log(s: String) {
+        Log.i(TAG, s)
+    }
+
+    private var recorder: MediaRecorder? = null
+    private var recording = false
+    private var mSurface : Surface? = null
 
     fun translate(dx: Float, dy: Float, dz: Float) {
         val translateScaleFactor = MODEL_BOUND_SIZE / 200f
@@ -74,6 +93,73 @@ class ModelRenderer(private val model: Model?) : GLSurfaceView.Renderer {
         model?.draw(viewMatrix, projectionMatrix, light)
     }
 
+
+    private fun initRecorder() { // this takes care of all the mediarecorder settings
+        val video = Environment.getExternalStorageDirectory().absolutePath + "/Movies/"
+        val filename = video + "sk005.mp4"
+        val outputFile = File(filename)
+        outputFile.createNewFile()
+        recorder = MediaRecorder()
+        log("Output file name: " + filename)
+        val cpHigh = CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH)
+//        recorder?.surface
+//        recorder?.setProfile(cpHigh)
+
+        recorder?.setVideoSource(MediaRecorder.VideoSource.SURFACE)
+
+        mSurface?.let { recorder?.setInputSurface(it) }
+//        recorder?.setIn
+        //recorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+        // default microphone to be used for audio
+        // recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);// default camera to be used for video capture.
+//        recorder?.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP) // generally used also includes h264 and best for flash
+         recorder?.setVideoEncoder(MediaRecorder.VideoEncoder.H264); //well known video codec used by many including for flash
+        //recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);// typically amr_nb is the only codec for mobile phones so...
+
+        recorder?.setVideoFrameRate(15);// typically 12-15 best for normal use. For 1080p usually 30fms is used.
+         recorder?.setVideoSize(720,480);// best size for resolution.
+        //recorder.setMaxFileSize(10000000);
+        recorder?.setOutputFile(outputFile)
+//        recorder?.setVideoEncodingBitRate(256000);//
+        //recorder.setAudioEncodingBitRate(8000);
+        recorder?.setMaxDuration(600000)
+    }
+    private fun prepareRecorder() {
+//        recorder?.setVideoSource(this.surface)
+        try {
+            recorder?.setPreviewDisplay(surfaceView.holder.surface)
+
+            recorder?.prepare()
+            recorder?.start()
+
+            recording = true
+        } catch (e: IllegalStateException) {
+            e.printStackTrace()
+//            finish()
+        } catch (e: IOException) {
+            e.printStackTrace()
+//            finish()
+        }
+    }
+
+
+
+    private fun startRecord(){
+        initRecorder()
+        log("Starting 3D Record")
+        prepareRecorder()
+    }
+    public fun finishRecord(vname: String){
+        if (recording) {
+            log("Stopping 3D Record " + vname)
+            recorder?.stop()
+            recording = false
+        }
+        recorder?.release()
+        log(" 3D Record done..")
+//        finish()
+    }
+
     override fun onSurfaceChanged(unused: GL10, width: Int, height: Int) {
         GLES20.glViewport(0, 0, width, height)
         val ratio = width.toFloat() / height
@@ -110,6 +196,7 @@ class ModelRenderer(private val model: Model?) : GLSurfaceView.Renderer {
             floor.setOffsetY(it.floorOffset)
         }
         updateFloorMatrix()
+//        startRecord()
     }
 
     companion object {
@@ -117,4 +204,5 @@ class ModelRenderer(private val model: Model?) : GLSurfaceView.Renderer {
         private const val Z_NEAR = 2f
         private const val Z_FAR = MODEL_BOUND_SIZE * 10
     }
+
 }
